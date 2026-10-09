@@ -1,0 +1,8 @@
+{
+  "name": "Remix Campus Made Easy",
+  "description": "Simplify Everyday Campus Life - A modern all-in-one college campus management web application connecting students, faculty, wardens, and administrators.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

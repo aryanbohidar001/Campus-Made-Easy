@@ -1,0 +1,143 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isCurrentUser(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email != null && (
+          request.auth.token.email == 'aryanbohidar001@gmail.com' ||
+          request.auth.token.email == 'amansahu9337@gmail.com'
+        )) ||
+        request.auth.token.admin == true
+      );
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && (isCurrentUser(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Student Profiles
+    match /studentProfiles/{studentId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && (isCurrentUser(studentId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Hostels & Rooms
+    match /hostels/{hostelId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    match /rooms/{roomId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Maintenance Tickets
+    match /tickets/{ticketId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn();
+    }
+
+    // Mess Menu & Feedback
+    match /messMenu/{menuId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    match /messFeedback/{feedbackId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn();
+    }
+
+    // Announcements
+    match /announcements/{announcementId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Attendance
+    match /attendance/{attendanceId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Attendance Sessions (Dynamic QR sessions)
+    match /attendanceSessions/{sessionId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // Attendance Records (Student verified attendance entries - tamper proof)
+    match /attendanceRecords/{recordId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // Campus Geofence & System Attendance Settings
+    match /campusSettings/{settingsId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Smart Digital Gate Passes
+    match /gatePasses/{passId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // Marks
+    match /marks/{markId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Study Materials
+    match /studyMaterials/{materialId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Fees
+    match /fees/{feeId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn();
+    }
+
+    // Test connection doc
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -1,0 +1,383 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered campus user profile with authentication details and role",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique user ID" },
+        "email": { "type": "string", "description": "User college email address" },
+        "name": { "type": "string", "description": "User full name" },
+        "role": { "type": "string", "enum": ["student", "teacher", "warden", "admin"], "description": "Access control role" },
+        "phone": { "type": "string", "description": "Contact phone number" },
+        "avatar": { "type": "string", "description": "Profile picture URL" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "email", "name", "role"]
+    },
+    "StudentProfile": {
+      "title": "StudentProfile",
+      "description": "Academic and hostel profile details for a student",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Reference to user ID" },
+        "rollNumber": { "type": "string", "description": "Unique student roll number" },
+        "course": { "type": "string", "description": "Degree course (e.g., B.Tech)" },
+        "branch": { "type": "string", "description": "Academic branch (e.g., Computer Science & Engineering)" },
+        "year": { "type": "string", "description": "Current year of study (e.g., 3rd Year)" },
+        "semester": { "type": "string", "description": "Current semester (e.g., 5th)" },
+        "cgpa": { "type": "number", "description": "Current cumulative GPA" },
+        "hostelId": { "type": "string", "description": "Hostel identifier" },
+        "roomNumber": { "type": "string", "description": "Room number" },
+        "bedNumber": { "type": "string", "description": "Bed number" },
+        "emergencyContact": { "type": "string", "description": "Emergency contact name and phone" },
+        "address": { "type": "string", "description": "Permanent home address" }
+      },
+      "required": ["userId", "rollNumber", "course", "branch", "year", "semester"]
+    },
+    "Hostel": {
+      "title": "Hostel",
+      "description": "Hostel building information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Hostel ID" },
+        "name": { "type": "string", "description": "Hostel name (e.g., Aryabhatta Boys Hostel)" },
+        "block": { "type": "string", "description": "Hostel block" },
+        "type": { "type": "string", "enum": ["Boys", "Girls"], "description": "Hostel type" },
+        "wardenName": { "type": "string", "description": "Chief warden name" },
+        "wardenPhone": { "type": "string", "description": "Warden phone contact" },
+        "totalRooms": { "type": "number", "description": "Total room count" },
+        "totalBeds": { "type": "number", "description": "Total bed capacity" },
+        "occupiedBeds": { "type": "number", "description": "Currently allocated beds" }
+      },
+      "required": ["id", "name", "block", "type"]
+    },
+    "Room": {
+      "title": "Room",
+      "description": "Hostel room specifications and occupancy",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Room unique ID" },
+        "hostelId": { "type": "string", "description": "Associated hostel ID" },
+        "roomNumber": { "type": "string", "description": "Room number" },
+        "block": { "type": "string", "description": "Block designation" },
+        "roomType": { "type": "string", "enum": ["Single", "Double", "Triple"], "description": "Type of room" },
+        "totalBeds": { "type": "number", "description": "Total bed capacity" },
+        "occupiedBeds": { "type": "number", "description": "Number of occupied beds" },
+        "status": { "type": "string", "enum": ["Active", "Maintenance", "Reserved"], "description": "Room status" }
+      },
+      "required": ["id", "hostelId", "roomNumber", "totalBeds"]
+    },
+    "Ticket": {
+      "title": "Ticket",
+      "description": "Campus maintenance grievance or repair ticket",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Ticket unique identifier" },
+        "userId": { "type": "string", "description": "Student or creator ID" },
+        "userName": { "type": "string", "description": "Name of person who raised ticket" },
+        "category": { "type": "string", "enum": ["Electrical", "Plumbing", "Cleaning", "Internet/WiFi", "Furniture", "Hostel Room", "Water", "Other"], "description": "Issue category" },
+        "title": { "type": "string", "description": "Ticket summary title" },
+        "description": { "type": "string", "description": "Detailed explanation of the issue" },
+        "location": { "type": "string", "description": "Exact room/block/campus location" },
+        "priority": { "type": "string", "enum": ["Low", "Medium", "High", "Urgent"], "description": "Issue priority" },
+        "status": { "type": "string", "enum": ["Submitted", "Assigned", "In Progress", "Resolved", "Closed"], "description": "Current lifecycle status" },
+        "assignedTo": { "type": "string", "description": "Staff member or technician assigned" },
+        "resolution": { "type": "string", "description": "Resolution notes when fixed" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["id", "userId", "category", "title", "description", "location", "priority", "status"]
+    },
+    "MessMenu": {
+      "title": "MessMenu",
+      "description": "Daily and weekly mess meals schedule",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Menu day ID" },
+        "dayOfWeek": { "type": "string", "description": "Day (Monday, Tuesday, etc.)" },
+        "breakfast": { "type": "string", "description": "Breakfast items" },
+        "lunch": { "type": "string", "description": "Lunch items" },
+        "snacks": { "type": "string", "description": "Evening snacks items" },
+        "dinner": { "type": "string", "description": "Dinner items" }
+      },
+      "required": ["id", "dayOfWeek", "breakfast", "lunch", "snacks", "dinner"]
+    },
+    "MessFeedback": {
+      "title": "MessFeedback",
+      "description": "Student feedback and rating on daily mess food",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Feedback ID" },
+        "userId": { "type": "string", "description": "Student user ID" },
+        "userName": { "type": "string", "description": "Student name" },
+        "meal": { "type": "string", "enum": ["Breakfast", "Lunch", "Snacks", "Dinner"], "description": "Meal evaluated" },
+        "rating": { "type": "number", "description": "Star rating 1-5" },
+        "comment": { "type": "string", "description": "Detailed text feedback" },
+        "date": { "type": "string", "description": "Date of meal feedback" },
+        "reply": { "type": "string", "description": "Warden or mess manager response" }
+      },
+      "required": ["id", "userId", "userName", "meal", "rating", "comment", "date"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Campus notice or bulletin",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Announcement unique ID" },
+        "title": { "type": "string", "description": "Notice title" },
+        "content": { "type": "string", "description": "Notice detailed description" },
+        "category": { "type": "string", "enum": ["College", "Hostel", "Academic", "Exam", "Emergency", "Events"], "description": "Announcement category" },
+        "authorName": { "type": "string", "description": "Publisher name" },
+        "authorRole": { "type": "string", "description": "Publisher role" },
+        "date": { "type": "string", "description": "Publication date" },
+        "isImportant": { "type": "boolean", "description": "Whether highlighted with urgent/important badge" }
+      },
+      "required": ["id", "title", "content", "category", "authorName", "date"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Subject-wise attendance tracking",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Record ID" },
+        "studentId": { "type": "string", "description": "Student ID" },
+        "subjectCode": { "type": "string", "description": "Course subject code" },
+        "subjectName": { "type": "string", "description": "Subject title" },
+        "totalClasses": { "type": "number", "description": "Total classes conducted" },
+        "attendedClasses": { "type": "number", "description": "Classes attended by student" },
+        "facultyName": { "type": "string", "description": "Faculty instructor name" }
+      },
+      "required": ["id", "studentId", "subjectCode", "subjectName", "totalClasses", "attendedClasses"]
+    },
+    "MarkRecord": {
+      "title": "MarkRecord",
+      "description": "Academic test and examination marks",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Mark record ID" },
+        "studentId": { "type": "string", "description": "Student ID" },
+        "subjectCode": { "type": "string", "description": "Subject code" },
+        "subjectName": { "type": "string", "description": "Subject name" },
+        "internalMarks": { "type": "number", "description": "Internal assessment marks (out of 30)" },
+        "assignmentMarks": { "type": "number", "description": "Assignment marks (out of 20)" },
+        "examMarks": { "type": "number", "description": "End-sem examination marks (out of 50)" },
+        "grade": { "type": "string", "description": "Grade attained (A+, A, B, etc.)" }
+      },
+      "required": ["id", "studentId", "subjectCode", "subjectName", "grade"]
+    },
+    "StudyMaterial": {
+      "title": "StudyMaterial",
+      "description": "Notes, slides, lecture materials, and assignment files uploaded by faculty",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Material ID" },
+        "title": { "type": "string", "description": "Document title" },
+        "subject": { "type": "string", "description": "Subject name or course" },
+        "description": { "type": "string", "description": "Material summary" },
+        "fileType": { "type": "string", "enum": ["PDF", "PPT", "Notes", "Assignment", "Link"], "description": "File format" },
+        "fileUrl": { "type": "string", "description": "Download or view link" },
+        "uploadedBy": { "type": "string", "description": "Faculty member who uploaded" },
+        "uploadDate": { "type": "string", "description": "Date uploaded" }
+      },
+      "required": ["id", "title", "subject", "fileType", "uploadedBy", "uploadDate"]
+    },
+    "FeeRecord": {
+      "title": "FeeRecord",
+      "description": "Student tuition, hostel, and mess fee statements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Fee record ID" },
+        "studentId": { "type": "string", "description": "Student ID" },
+        "totalAmount": { "type": "number", "description": "Total fee assessed" },
+        "paidAmount": { "type": "number", "description": "Amount paid" },
+        "pendingAmount": { "type": "number", "description": "Outstanding balance" },
+        "dueDate": { "type": "string", "description": "Fee payment deadline" },
+        "status": { "type": "string", "enum": ["Paid", "Partial", "Pending", "Overdue"], "description": "Payment status" }
+      },
+      "required": ["id", "studentId", "totalAmount", "paidAmount", "pendingAmount", "status"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User notification alert for updates and campus activity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Notification ID" },
+        "userId": { "type": "string", "description": "Recipient user ID" },
+        "title": { "type": "string", "description": "Notification summary" },
+        "message": { "type": "string", "description": "Notification body" },
+        "type": { "type": "string", "enum": ["announcement", "ticket", "attendance", "material", "hostel", "mess", "fees"], "description": "Notification category" },
+        "isRead": { "type": "boolean", "description": "Read flag" },
+        "createdAt": { "type": "string", "description": "Timestamp created" }
+      },
+      "required": ["id", "userId", "title", "message", "type", "isRead", "createdAt"]
+    },
+    "AttendanceSession": {
+      "title": "AttendanceSession",
+      "description": "Dynamic QR lecture attendance session generated by faculty",
+      "type": "object",
+      "properties": {
+        "sessionId": { "type": "string", "description": "Unique session ID" },
+        "teacherId": { "type": "string", "description": "UID of teacher who created session" },
+        "teacherName": { "type": "string", "description": "Name of faculty" },
+        "subjectId": { "type": "string", "description": "Subject course code" },
+        "subjectName": { "type": "string", "description": "Subject title" },
+        "branch": { "type": "string", "description": "Department or branch" },
+        "semester": { "type": "string", "description": "Target semester" },
+        "section": { "type": "string", "description": "Section or batch" },
+        "classPeriod": { "type": "string", "description": "Class period time slot" },
+        "createdAt": { "type": "string", "description": "ISO timestamp or server time" },
+        "expiresAt": { "type": "string", "description": "Expiration ISO timestamp" },
+        "expiresAtTimestamp": { "type": "number", "description": "Epoch timestamp in milliseconds" },
+        "durationMinutes": { "type": "number", "description": "Validity duration in minutes (2, 5, 10)" },
+        "status": { "type": "string", "enum": ["ACTIVE", "EXPIRED", "CLOSED"], "description": "Session status" },
+        "qrToken": { "type": "string", "description": "Randomized cryptographic token for QR" }
+      },
+      "required": ["sessionId", "teacherId", "subjectName", "branch", "semester", "section", "expiresAt", "status", "qrToken"]
+    },
+    "AttendanceRecordItem": {
+      "title": "AttendanceRecordItem",
+      "description": "Student attendance entry verified via GPS geofencing and dynamic QR scan",
+      "type": "object",
+      "properties": {
+        "recordId": { "type": "string", "description": "Unique record ID" },
+        "sessionId": { "type": "string", "description": "Parent attendance session ID" },
+        "studentId": { "type": "string", "description": "Student user ID" },
+        "studentName": { "type": "string", "description": "Student full name" },
+        "rollNumber": { "type": "string", "description": "Roll number" },
+        "subject": { "type": "string", "description": "Course title" },
+        "date": { "type": "string", "description": "Date formatted DD-MM-YYYY or ISO" },
+        "timestamp": { "type": "string", "description": "Submission timestamp" },
+        "status": { "type": "string", "enum": ["PRESENT", "ABSENT", "LATE"], "description": "Attendance status" },
+        "latitude": { "type": "number", "description": "Student GPS latitude" },
+        "longitude": { "type": "number", "description": "Student GPS longitude" },
+        "distanceFromCollege": { "type": "number", "description": "Calculated distance from college in meters" },
+        "deviceInfo": { "type": "string", "description": "Client user agent or platform" }
+      },
+      "required": ["sessionId", "studentId", "studentName", "rollNumber", "subject", "date", "status", "distanceFromCollege"]
+    },
+    "CampusSettings": {
+      "title": "CampusSettings",
+      "description": "Configurable campus geofence coordinates, attendance radius, and academic master lists",
+      "type": "object",
+      "properties": {
+        "collegeName": { "type": "string", "description": "Name of the college / university" },
+        "collegeLatitude": { "type": "number", "description": "Latitude coordinate of college campus" },
+        "collegeLongitude": { "type": "number", "description": "Longitude coordinate of college campus" },
+        "allowedRadius": { "type": "number", "description": "Allowed GPS radius in meters" },
+        "defaultQrDuration": { "type": "number", "description": "Default QR duration in minutes" },
+        "updatedAt": { "type": "string", "description": "Last settings update timestamp" }
+      },
+      "required": ["collegeLatitude", "collegeLongitude", "allowedRadius"]
+    },
+    "GatePass": {
+      "title": "GatePass",
+      "description": "Smart digital gate pass request and verified movement record",
+      "type": "object",
+      "properties": {
+        "passId": { "type": "string", "description": "Unique gate pass ID (e.g. GP-20261009-001)" },
+        "studentId": { "type": "string", "description": "Student user ID" },
+        "studentName": { "type": "string", "description": "Student full name" },
+        "rollNumber": { "type": "string", "description": "Student roll number" },
+        "department": { "type": "string", "description": "Student department or branch" },
+        "semester": { "type": "string", "description": "Student semester" },
+        "reason": { "type": "string", "description": "Reason for leaving campus" },
+        "destination": { "type": "string", "description": "Destination location" },
+        "type": { "type": "string", "enum": ["Normal", "Emergency"], "description": "Type of gate pass" },
+        "leavingDate": { "type": "string", "description": "Date of departure" },
+        "leavingTime": { "type": "string", "description": "Expected leaving time" },
+        "expectedReturnTime": { "type": "string", "description": "Expected return timestamp/time" },
+        "expectedReturnTimestamp": { "type": "number", "description": "Epoch timestamp in ms for overdue detection" },
+        "optionalNote": { "type": "string", "description": "Optional notes or comments" },
+        "supportingDocument": { "type": "string", "description": "URL or filename of supporting document" },
+        "status": {
+          "type": "string",
+          "enum": ["PENDING", "APPROVED", "REJECTED", "EXITED", "RETURNED", "OVERDUE", "CANCELLED", "EXPIRED"],
+          "description": "Gate pass lifecycle status"
+        },
+        "approvedBy": { "type": "string", "description": "Faculty or warden user ID who reviewed" },
+        "approvedByName": { "type": "string", "description": "Name of reviewing faculty or warden" },
+        "approvedAt": { "type": "string", "description": "Approval timestamp" },
+        "rejectionReason": { "type": "string", "description": "Reason if rejected" },
+        "qrToken": { "type": "string", "description": "Cryptographically secure random QR token" },
+        "exitTime": { "type": "string", "description": "Verified exit timestamp at main gate" },
+        "entryTime": { "type": "string", "description": "Verified return timestamp at main gate" },
+        "securityExitId": { "type": "string", "description": "Security guard ID who confirmed exit" },
+        "securityEntryId": { "type": "string", "description": "Security guard ID who confirmed entry" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["passId", "studentId", "studentName", "rollNumber", "reason", "destination", "type", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile collection"
+    },
+    "/studentProfiles/{studentId}": {
+      "schema": "StudentProfile",
+      "description": "Detailed academic and hostel info for student"
+    },
+    "/hostels/{hostelId}": {
+      "schema": "Hostel",
+      "description": "Hostel buildings information"
+    },
+    "/rooms/{roomId}": {
+      "schema": "Room",
+      "description": "Hostel room specifications and capacities"
+    },
+    "/tickets/{ticketId}": {
+      "schema": "Ticket",
+      "description": "Campus maintenance tickets"
+    },
+    "/messMenu/{menuId}": {
+      "schema": "MessMenu",
+      "description": "Daily and weekly mess meals"
+    },
+    "/messFeedback/{feedbackId}": {
+      "schema": "MessFeedback",
+      "description": "Student food reviews and ratings"
+    },
+    "/announcements/{announcementId}": {
+      "schema": "Announcement",
+      "description": "Campus bulletins and notices"
+    },
+    "/attendance/{attendanceId}": {
+      "schema": "AttendanceRecord",
+      "description": "Student subject attendance statistics"
+    },
+    "/attendanceSessions/{sessionId}": {
+      "schema": "AttendanceSession",
+      "description": "Dynamic QR lecture attendance sessions"
+    },
+    "/attendanceRecords/{recordId}": {
+      "schema": "AttendanceRecordItem",
+      "description": "Verified student attendance records for sessions"
+    },
+    "/campusSettings/{settingsId}": {
+      "schema": "CampusSettings",
+      "description": "Configurable college geofence coordinates and attendance radius"
+    },
+    "/gatePasses/{passId}": {
+      "schema": "GatePass",
+      "description": "Smart digital gate pass documents and tracking"
+    },
+    "/marks/{markId}": {
+      "schema": "MarkRecord",
+      "description": "Student academic marks and grades"
+    },
+    "/studyMaterials/{materialId}": {
+      "schema": "StudyMaterial",
+      "description": "Faculty course materials and notes"
+    },
+    "/fees/{feeId}": {
+      "schema": "FeeRecord",
+      "description": "Student fee records"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "User notifications"
+    }
+  }
+}
